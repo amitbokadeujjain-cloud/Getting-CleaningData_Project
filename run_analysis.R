@@ -46,7 +46,6 @@ colnames(combined_dt) <- make.names(colnames(combined_dt), unique = TRUE)
 #-------------------------------
 dt_mean_std <- combined_dt %>%
   select(matches("mean|std"), Activity, Volunteer)
-
 #-------------------------------
 # 6. Replace activity numbers with names
 #-------------------------------
@@ -60,11 +59,11 @@ combined_dt$Activity <- factor(combined_dt$Activity,
 #-------------------------------
 # 7. Create tidy dataset (average)
 #-------------------------------
-avg_data <- combined_dt %>%
+avg_data <- dt_mean_std %>%
   group_by(Activity, Volunteer) %>%
-  summarise(across(everything(), mean), .groups = "drop")
+  summarise(across(where(is.numeric), mean), .groups = "drop")
 
 #-------------------------------
 # 8. View result
 #-------------------------------
-View(avg_data)
+write.csv(avg_data, "tidy_data.csv", row.names = FALSE)
